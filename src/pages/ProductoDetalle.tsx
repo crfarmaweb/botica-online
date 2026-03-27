@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, Star, Truck, Shield, Check } from 'lucide-react';
 import { useApp, products } from '../context/AppContext';
+import SEO from '../components/SEO';
 import './ProductoDetalle.css';
 
 export default function ProductoDetalle() {
@@ -34,6 +35,12 @@ export default function ProductoDetalle() {
 
   return (
     <div className="df-product-page">
+      {product && (
+        <SEO 
+          title={`${product.name} - ${product.brand} | CR Pharma`}
+          description={product.description}
+        />
+      )}
       <div className="df-container">
         <div className="df-breadcrumb">
           <Link to="/">Inicio</Link>

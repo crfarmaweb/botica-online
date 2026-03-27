@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, MessageCircle, Star } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { api } from '../utils/api';
+import SEO from '../components/SEO';
 import './AppHome.css';
 
 const brands = [
@@ -68,7 +69,12 @@ export default function AppHome() {
   };
 
   return (
-    <div className="df-home">
+    <>
+      <SEO 
+        title="CR Pharma - Parafarmacia Online | Envío 24-48h | Madrid"
+        description="Tu parafarmacia online de confianza. Encuentra los mejores productos de cuidado personal, belleza, salud, bebé y mamá con envío rápido a toda España."
+      />
+      <div className="df-home">
       {/* Hero Slider */}
       <section className="df-hero">
         <div className="df-hero-slide">
@@ -289,6 +295,7 @@ export default function AppHome() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

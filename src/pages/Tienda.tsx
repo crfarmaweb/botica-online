@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Grid, List, ChevronRight, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { api } from '../utils/api';
+import SEO from '../components/SEO';
 import './Tienda.css';
 
 export default function Tienda() {
@@ -66,6 +67,10 @@ export default function Tienda() {
 
   return (
     <div className="df-tienda">
+      <SEO 
+        title="Tienda - CR Pharma | Productos de Parafarmacia Online"
+        description="Explora nuestro catálogo de parafarmacia online. Cuidado facial, corporal, vitaminas, bebé y mamá, higiene y más. Envío 24-48h."
+      />
       <div className="df-container">
         {/* Breadcrumb */}
         <div className="df-breadcrumb">
