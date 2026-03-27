@@ -9,6 +9,9 @@ import Retos from './pages/Retos';
 import Carrito from './pages/Carrito';
 import Blog from './pages/Blog';
 import Favoritos from './pages/Favoritos';
+import Auth from './pages/Auth';
+import Terminos from './pages/Terminos';
+import Privacidad from './pages/Privacidad';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
@@ -30,6 +33,9 @@ function App() {
               <Route path="/carrito" element={<Carrito />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/favoritos" element={<Favoritos />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/terminos" element={<Terminos />} />
+              <Route path="/privacidad" element={<Privacidad />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

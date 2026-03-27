@@ -80,6 +80,11 @@ const promotions = [
   { id: '2', title: 'Envío gratis', code: 'ENVIOFREE', discount: 0, minPurchase: 35, active: true }
 ];
 
+// Users (demo data)
+const users = [
+  { id: '1', email: 'demo@crpharma.es', password: 'demo123', name: 'Usuario Demo', phone: '612345678', points: 150, level: 'Bronce' }
+];
+
 // Products
 app.get('/api/products', (req, res) => {
   const { category, subcategory, brand, search, sort, limit } = req.query;
@@ -134,5 +139,41 @@ app.post('/api/promotions/validate', (req, res) => {
 
 // Health
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+// Users - Login
+app.post('/api/users/login', (req, res) => {
+  const { email, password } = req.body;
+  const user = users.find(u => u.email === email && u.password === password);
+  
+  if (!user) {
+    return res.status(401).json({ error: 'Email o contraseña incorrectos' });
+  }
+  
+  const { password: _, ...userWithoutPassword } = user;
+  res.json(userWithoutPassword);
+});
+
+// Users - Register
+app.post('/api/users/register', (req, res) => {
+  const { email, password, name, phone } = req.body;
+  
+  if (users.find(u => u.email === email)) {
+    return res.status(400).json({ error: 'El email ya está registrado' });
+  }
+  
+  const newUser = {
+    id: String(users.length + 1),
+    email,
+    password,
+    name: name || '',
+    phone: phone || '',
+    points: 100,
+    level: 'Bronce'
+  };
+  
+  users.push(newUser);
+  const { password: _, ...userWithoutPassword } = newUser;
+  res.status(201).json(userWithoutPassword);
+});
 
 export default app;

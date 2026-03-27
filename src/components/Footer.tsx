@@ -50,8 +50,8 @@ export default function Footer() {
           <ul className="footer-links">
             <li><Link to="/perfil">Mi Cuenta</Link></li>
             <li><Link to="/perfil">Mis Pedidos</Link></li>
-            <li><a href="#">Política de Privacidad</a></li>
-            <li><a href="#">Términos y Condiciones</a></li>
+            <li><Link to="/privacidad">Política de Privacidad</Link></li>
+            <li><Link to="/terminos">Términos y Condiciones</Link></li>
             <li><a href="#">Política de Envíos</a></li>
             <li><a href="#">Política de Devoluciones</a></li>
           </ul>
