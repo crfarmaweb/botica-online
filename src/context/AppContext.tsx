@@ -159,8 +159,10 @@ interface AppContextType {
   placeOrder: (address: Address, paymentMethod: string) => void;
   favorites: Product[];
   toggleFavorite: (product: Product) => void;
-  login: (email: string, password: string) => void;
+  login: (userData: User) => void;
   logout: () => void;
+  register: (userData: { email: string; password: string; name: string; phone: string }) => Promise<boolean>;
+  updateProfile: (data: Partial<User>) => void;
   addReview: (productId: number, rating: number, comment: string) => void;
 }
 
@@ -526,12 +528,42 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const login = (email: string, _password: string) => {
-    setUser(prev => ({ ...prev, isLoggedIn: true, email }));
+  const login = (userData: User) => {
+    setUser({ ...userData, isLoggedIn: true });
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const logout = () => {
-    setUser(prev => ({ ...prev, isLoggedIn: false }));
+    const defaultUserData = {
+      ...defaultUser,
+      isLoggedIn: false,
+    };
+    setUser(defaultUserData);
+    localStorage.removeItem('user');
+  };
+
+  const register = async (data: { email: string; password: string; name: string; phone: string }): Promise<boolean> => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/users/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        login(userData);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const updateProfile = (data: Partial<User>) => {
+    setUser(prev => ({ ...prev, ...data }));
+    const currentUser = { ...user, ...data };
+    localStorage.setItem('user', JSON.stringify(currentUser));
   };
 
   const addReview = (productId: number, rating: number, comment: string) => {
@@ -576,6 +608,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       toggleFavorite,
       login,
       logout,
+      register,
+      updateProfile,
       addReview,
     }}>
       {children}

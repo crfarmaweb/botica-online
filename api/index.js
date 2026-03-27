@@ -82,7 +82,7 @@ const promotions = [
 
 // Users (demo data)
 const users = [
-  { id: '1', email: 'demo@crpharma.es', password: 'demo123', name: 'Usuario Demo', phone: '612345678', points: 150, level: 'Bronce' }
+  { id: '1', email: 'demo@crpharma.es', password: 'demo123', name: 'Usuario Demo', phone: '612345678', points: 150, level: 'Bronce', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' }
 ];
 
 // Products
@@ -150,7 +150,10 @@ app.post('/api/users/login', (req, res) => {
   }
   
   const { password: _, ...userWithoutPassword } = user;
-  res.json(userWithoutPassword);
+  res.json({
+    ...userWithoutPassword,
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
+  });
 });
 
 // Users - Register
@@ -173,7 +176,10 @@ app.post('/api/users/register', (req, res) => {
   
   users.push(newUser);
   const { password: _, ...userWithoutPassword } = newUser;
-  res.status(201).json(userWithoutPassword);
+  res.status(201).json({
+    ...userWithoutPassword,
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
+  });
 });
 
 export default app;
