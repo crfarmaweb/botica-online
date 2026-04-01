@@ -62,12 +62,13 @@ export default function Auth() {
         });
 
         if (authError) {
+          console.error('[Supabase Auth Error]: Login failed:', authError);
           if (authError.message.includes('Invalid login credentials')) {
             setError('Email o contraseña incorrectos');
           } else if (authError.message.includes('Email not confirmed')) {
             setError('Por favor confirma tu email antes de iniciar sesión');
           } else {
-            setError(authError.message);
+            setError(`Error de autenticación: ${authError.message}`);
           }
           return;
         }
@@ -112,17 +113,18 @@ export default function Auth() {
         });
 
         if (authError) {
+          console.error('[Supabase Auth Error]: Registration failed:', authError);
           if (authError.message.includes('already registered')) {
             setError('Este email ya está registrado. Inicia sesión.');
           } else {
-            setError(authError.message);
+            setError(`Error al crear cuenta: ${authError.message}`);
           }
           return;
         }
 
         if (data.user) {
           // Guardar perfil adicional en nuestra tabla users
-          await supabase.from('users').insert({
+          const { error: profileError } = await supabase.from('users').insert({
             id: data.user.id,
             email: formData.email,
             name: formData.name,
@@ -130,6 +132,12 @@ export default function Auth() {
             points: 100, // puntos de bienvenida
             total_points: 100,
           });
+
+          if (profileError) {
+            console.error('[Supabase DB Error]: Profile creation failed:', profileError);
+            setError(`Cuenta creada, pero hubo un problema configurando tu perfil: ${profileError.message}`);
+            return;
+          }
 
           // Si Supabase está en modo sin confirmación de email, hacer login directo
           if (data.session) {
