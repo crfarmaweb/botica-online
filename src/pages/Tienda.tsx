@@ -344,6 +344,8 @@ export default function Tienda() {
                 <button onClick={clearFilters} className="df-view-all-btn">Ver todos los productos</button>
               </div>
             )}
+
+            {/* Products Grid - Old code removed */}
           </div>
         </div>
       </div>
