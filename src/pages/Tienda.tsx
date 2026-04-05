@@ -338,19 +338,6 @@ export default function Tienda() {
                 ))}
               </div>
             ) : (
-                      <Link to={`/producto/${product.id}`} className="df-product-title">{product.name}</Link>
-                      <div className="df-product-price">
-                        <span className="df-price-current">€{product.price.toFixed(2)}</span>
-                        {product.originalPrice && (
-                          <span className="df-price-original">€{product.originalPrice.toFixed(2)}</span>
-                        )}
-                      </div>
-                      <button className="df-add-btn">Añadir</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
               <div className="df-empty">
                 <h3>No encontramos productos</h3>
                 <p>Intenta con otros filtros o categorías</p>
@@ -359,8 +346,6 @@ export default function Tienda() {
             )}
           </div>
         </div>
-        </>
-        )}
       </div>
     </div>
   );
