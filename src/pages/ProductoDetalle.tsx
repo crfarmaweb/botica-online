@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart, Minus, Plus, Star, Truck, Shield, Check, Bell } from 'lucide-react';
+import { Heart, Minus, Plus, Star, Truck, Shield, Check } from 'lucide-react';
 import { useApp, products } from '../context/AppContext';
 import SEO from '../components/SEO';
 import './ProductoDetalle.css';
@@ -11,16 +11,6 @@ export default function ProductoDetalle() {
   const [quantity, setQuantity] = useState(1);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
-  const [showPriceAlert, setShowPriceAlert] = useState(false);
-  const [alertEmail, setAlertEmail] = useState('');
-
-  const handlePriceAlert = () => {
-    if (alertEmail.trim()) {
-      alert(`Te avisaremos cuando baje el precio de ${product.name}`);
-      setAlertEmail('');
-      setShowPriceAlert(false);
-    }
-  };
 
   const product = products.find(p => p.id === Number(id));
 
@@ -46,10 +36,6 @@ export default function ProductoDetalle() {
   };
 
   const productReviews = reviews.filter(r => r.productId === product.id);
-  
-  const relatedProducts = products
-    .filter(p => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
 
   const handleSubmitReview = () => {
     if (newReview.comment.trim()) {
@@ -109,26 +95,6 @@ export default function ProductoDetalle() {
               <span className="df-current-price">€{product.price.toFixed(2)}</span>
               {product.originalPrice && (
                 <span className="df-original-price">€{product.originalPrice.toFixed(2)}</span>
-              )}
-              
-              <button 
-                className="df-price-alert-btn"
-                onClick={() => setShowPriceAlert(!showPriceAlert)}
-              >
-                <Bell size={16} />
-                <span>Avísame si baja</span>
-              </button>
-              
-              {showPriceAlert && (
-                <div className="df-price-alert-form">
-                  <input 
-                    type="email" 
-                    placeholder="Tu email"
-                    value={alertEmail}
-                    onChange={(e) => setAlertEmail(e.target.value)}
-                  />
-                  <button onClick={handlePriceAlert}>Activar</button>
-                </div>
               )}
             </div>
 
@@ -281,25 +247,6 @@ export default function ProductoDetalle() {
               ))
             )}
           </div>
-          
-          {/* Related Products */}
-          {relatedProducts.length > 0 && (
-            <div className="df-related-products">
-              <h3>Productos relacionados</h3>
-              <div className="df-related-grid">
-                {relatedProducts.map(p => (
-                  <Link key={p.id} to={`/producto/${p.id}`} className="df-related-card">
-                    <img src={p.image} alt={p.name} />
-                    <div className="df-related-info">
-                      <span className="df-related-brand">{p.brand}</span>
-                      <span className="df-related-name">{p.name}</span>
-                      <span className="df-related-price">{p.price.toFixed(2)}€</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

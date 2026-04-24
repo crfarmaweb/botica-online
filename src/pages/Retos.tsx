@@ -4,72 +4,28 @@ import { useApp, type Challenge } from '../context/AppContext';
 import './Retos.css';
 
 const levelConfig = {
-  Bronce: { 
-    color: '#cd7f32', 
-    gradient: 'linear-gradient(135deg, #cd7f32, #8b5a2b)', 
-    icon: '🥉', 
-    minSpend: 0,
-    spendLabel: '0€',
-    benefits: ['1 punto por cada € gastado', 'Ofertas exclusivas miembros', 'Puntos de bienvenida: 50'],
-  },
-  Plata: { 
-    color: '#94a3b8', 
-    gradient: 'linear-gradient(135deg, #94a3b8, #64748b)', 
-    icon: '🥈', 
-    minSpend: 200,
-    spendLabel: '200€',
-    benefits: ['1.2 puntos por €', 'Envío gratis (+30€)', 'Acceso a productos canjeables'],
-  },
-  Oro: { 
-    color: '#eab308', 
-    gradient: 'linear-gradient(135deg, #eab308, #ca8a04)', 
-    icon: '🥇', 
-    minSpend: 500,
-    spendLabel: '500€',
-    benefits: ['1.5 puntos por €', 'Envío gratis siempre', 'Más productos canjeables'],
-  },
-  Platino: { 
-    color: '#64748b', 
-    gradient: 'linear-gradient(135deg, #64748b, #334155)', 
-    icon: '💎', 
-    minSpend: 1500,
-    spendLabel: '1.500€',
-    benefits: ['2 puntos por €', 'Envío express gratis', 'Productos premium canjeables'],
-  },
-  Esmeralda: { 
-    color: '#10b981', 
-    gradient: 'linear-gradient(135deg, #10b981, #059669)', 
-    icon: '💚', 
-    minSpend: 3000,
-    spendLabel: '3.000€',
-    benefits: ['2.5 puntos por €', 'Envío express 24h', 'Productos exclusivos', 'Early access a ofertas'],
-  },
-  Diamante: { 
-    color: '#06b6d4', 
-    gradient: 'linear-gradient(135deg, #06b6d4, #0891b2)', 
-    icon: '✨', 
-    minSpend: 5000,
-    spendLabel: '5.000€',
-    benefits: ['3 puntos por €', 'Envío express 24h gratis', 'Asesoramiento personal', 'Invitaciones VIP', 'Productos únicos'],
-  },
+  Bronce: { color: '#cd7f32', gradient: 'linear-gradient(135deg, #cd7f32, #8b5a2b)', icon: '🥉', minPoints: 0 },
+  Plata: { color: '#94a3b8', gradient: 'linear-gradient(135deg, #94a3b8, #64748b)', icon: '🥈', minPoints: 500 },
+  Oro: { color: '#eab308', gradient: 'linear-gradient(135deg, #eab308, #ca8a04)', icon: '🥇', minPoints: 2000 },
+  Platino: { color: '#64748b', gradient: 'linear-gradient(135deg, #64748b, #334155)', icon: '💎', minPoints: 5000 },
+  Diamante: { color: '#06b6d4', gradient: 'linear-gradient(135deg, #06b6d4, #0891b2)', icon: '✨', minPoints: 10000 },
+};
+
+const benefitsByLevel = {
+  Bronce: ['2% de descuento en tu primera compra', 'Acceso a ofertas exclusivas', 'Puntos por cada compra'],
+  Plata: ['5% de descuento permanente', 'Envío gratis en pedidos +30€', ' birthday gift'],
+  Oro: ['10% de descuento permanente', 'Envío gratis siempre', 'Atención prioritaria'],
+  Platino: ['15% de descuento permanente', 'Envío gratis express', 'Productos exclusivos'],
+  Diamante: ['20% de descuento permanente', 'Envío gratis express 24h', 'Asesoramiento personal', 'Invitaciones a eventos'],
 };
 
 const rewards = [
-  { id: 1, name: 'Bálsamo labial', points: 150, icon: '💋', description: 'Variedad de sabores', category: 'bebe-mama', stock: 50 },
-  { id: 2, name: 'Gel hidroalcoholico 50ml', points: 200, icon: '🧴', description: 'Pack de 2 unidades', category: 'higiene', stock: 100 },
-  { id: 3, name: 'Protector solar mini 30ml', points: 350, icon: '☀️', description: 'SPF 50, travel size', category: 'solar', stock: 30 },
-  { id: 4, name: 'Colirio monodosis', points: 250, icon: '👁️', description: 'Alivio ojos secos', category: 'optica', stock: 80 },
-  { id: 5, name: 'Tiritas pack 20u', points: 100, icon: '🩹', description: 'Variados colores', category: 'primeros-auxilios', stock: 200 },
-  { id: 6, name: 'Spray nasal', points: 180, icon: '👃', description: 'Alivio congestión', category: 'medicamentos', stock: 60 },
-  { id: 7, name: 'Pastillas garganta', points: 120, icon: '🫁', description: 'Pack de 3 blisters', category: 'medicamentos', stock: 150 },
-  { id: 8, name: 'Compresa post-parto', points: 200, icon: '👶', description: 'Pack de 10 unidades', category: 'bebe-mama', stock: 40 },
-  { id: 9, name: 'Termómetro digital', points: 500, icon: '🌡️', description: 'Rápido y preciso', category: 'primeros-auxilios', stock: 25 },
-  { id: 10, name: 'Pasta dental infantil', points: 180, icon: '🦷', description: 'Sabor frutal', category: 'higiene', stock: 70 },
-  { id: 11, name: 'Chupete neonatal', points: 250, icon: '🍼', description: 'Silicona медицинская', category: 'bebe-mama', stock: 35 },
-  { id: 12, name: 'Gasa estéril 5u', points: 80, icon: '🩺', description: '10x10cm', category: 'primeros-auxilios', stock: 300 },
-  { id: 13, name: 'Pañuelos desechables', points: 90, icon: '🧻', description: 'Pack de 3 cajas', category: 'higiene', stock: 180 },
-  { id: 14, name: 'Crema manos', points: 220, icon: '✋', description: 'Hidratante intensiva', category: 'cosmetica-belleza', stock: 50 },
-  { id: 15, name: 'Bolsa frío instantáneo', points: 300, icon: '❄️', description: 'Para lesiones', category: 'primeros-auxilios', stock: 45 },
+  { id: 1, name: '10% de descuento', points: 500, icon: '🎫', description: 'Válido por 30 días' },
+  { id: 2, name: 'Envío gratis', points: 300, icon: '🚚', description: 'Una compra' },
+  { id: 3, name: 'Gel antibacterial', points: 250, icon: '🧴', description: 'Stock limitado' },
+  { id: 4, name: '5% de descuento', points: 200, icon: '🎫', description: 'Válido por 15 días' },
+  { id: 5, name: 'Bálsamo labial', points: 150, icon: '💋', description: 'Nuevo aroma' },
+  { id: 6, name: '100 puntos extra', points: 100, icon: '⭐', description: 'En tu próxima compra' },
 ];
 
 const typeIcons: Record<string, string> = {
@@ -87,17 +43,12 @@ export default function Retos() {
   const currentLevel = user.level || 'Bronce';
   const levelData = levelConfig[currentLevel as keyof typeof levelConfig];
   
-  const nextLevel = currentLevel === 'Bronce' ? 'Plata' : 
-                    currentLevel === 'Plata' ? 'Oro' : 
-                    currentLevel === 'Oro' ? 'Platino' : 
-                    currentLevel === 'Platino' ? 'Esmeralda' :
-                    currentLevel === 'Esmeralda' ? 'Diamante' : null;
+  const nextLevel = currentLevel === 'Bronce' ? 'Plata' : currentLevel === 'Plata' ? 'Oro' : currentLevel === 'Oro' ? 'Platino' : currentLevel === 'Platino' ? 'Diamante' : null;
   const nextLevelData = nextLevel ? levelConfig[nextLevel as keyof typeof levelConfig] : null;
   
-  const currentSpend = user.totalPoints;
-  const pointsToNextLevel = nextLevelData ? nextLevelData.minSpend - currentSpend : 0;
-  const progressToNext = nextLevelData ? ((currentSpend - levelData.minSpend) / (nextLevelData.minSpend - levelData.minSpend)) * 100 : 100;
-  
+  const pointsToNext = nextLevelData ? nextLevelData.minPoints - user.totalPoints : 0;
+  const progressToNext = nextLevelData ? ((user.totalPoints - levelData.minPoints) / (nextLevelData.minPoints - levelData.minPoints)) * 100 : 100;
+
   const dailyChallenges = challenges.filter(c => c.type === 'daily');
   const weeklyChallenges = challenges.filter(c => c.type === 'weekly');
   const purchaseChallenges = challenges.filter(c => c.type === 'purchase');
@@ -106,7 +57,8 @@ export default function Retos() {
   const lockedAchievements = user.achievements.filter(a => !a.unlocked);
 
   const handleRedeem = (_rewardId: number) => {
-    alert('¡Premio canjeado! Recibirás tu código por email.');
+    console.log('Reward ID:', _rewardId);
+    alert('¡Premio canjeado exitosamente!');
   };
 
   return (
@@ -118,8 +70,8 @@ export default function Retos() {
             <span className="level-icon">{levelData.icon}</span>
             <span className="level-name">{currentLevel}</span>
           </div>
-          <h1>MF POINTS</h1>
-          <p className="club-tagline">Gana puntos con cada compra y canjéalos por premios exclusivos</p>
+          <h1>MF ELITE</h1>
+          <p className="club-tagline">Excellence in health and exclusive benefits</p>
           
           <div className="club-stats">
             <div className="stat-box">
@@ -138,16 +90,16 @@ export default function Retos() {
         </div>
         
         {nextLevelData && (
-            <div className="next-level-card">
+          <div className="next-level-card">
             <div className="next-level-header">
               <Crown size={18} />
               <span>Siguiente nivel: {nextLevel}</span>
             </div>
             <div className="progress-bar-wrapper">
               <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${Math.min(progressToNext, 100)}%` }}></div>
+                <div className="progress-fill" style={{ width: `${progressToNext}%` }}></div>
               </div>
-              <span className="progress-text">{pointsToNextLevel > 0 ? `¡Gasta ${pointsToNextLevel}€ más para alcanzar ${nextLevel}!` : `¡Has alcanzado el nivel ${nextLevel}!`}</span>
+              <span className="progress-text">{pointsToNext} puntos para {nextLevel}</span>
             </div>
           </div>
         )}
@@ -305,7 +257,7 @@ export default function Retos() {
                   </div>
                   <div className="level-benefits">
                     <ul>
-                      {data.benefits.map((benefit, i) => (
+                      {benefitsByLevel[level as keyof typeof benefitsByLevel].map((benefit, i) => (
                         <li key={i}>
                           <CheckCircle size={14} />
                           {benefit}
@@ -314,7 +266,7 @@ export default function Retos() {
                     </ul>
                   </div>
                   <div className="level-requirement">
-                    <span>Desde {data.spendLabel}</span>
+                    <span>Desde {data.minPoints.toLocaleString()} puntos</span>
                   </div>
                 </div>
               ))}

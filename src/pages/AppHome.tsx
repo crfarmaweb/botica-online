@@ -20,7 +20,7 @@ const brands = [
 const promoBanners = [
   { id: 1, title: '-30% en Protección Solar', subtitle: 'Dale a tu piel la protección que merece', img: 'https://images.unsplash.com/photo-1535295972055-1c762f4483e5?w=600&h=200&fit=crop', link: '/tienda?cat=solar', color: '#FF6B6B' },
   { id: 2, title: '2ª Unidad -50%', subtitle: 'En toda la cosmética seleccionada', img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=200&fit=crop', link: '/tienda?cat=cosmetica-belleza', color: '#4BFFA3' },
-  { id: 3, title: 'Envío Gratis', subtitle: 'En pedidos superiores a 35€', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=200&fit=crop', link: '/tienda', color: '#00897b' },
+  { id: 3, title: 'Envío Gratis', subtitle: 'En pedidos superiores a 35€', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=200&fit=crop', link: '/tienda', color: 'var(--color-primary' },
   { id: 4, title: 'Club MF ELITE', subtitle: 'Acumula puntos en cada compra', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d42d52?w=600&h=200&fit=crop', link: '/retos', color: '#a71e2c' },
 ];
 

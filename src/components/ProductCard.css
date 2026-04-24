@@ -53,7 +53,7 @@
   top: 12px;
   left: 12px;
   background: var(--color-primary);
-  color: #2D4F4B;
+  color: white;
   font-size: 0.7rem;
   font-weight: 800;
   padding: 4px 8px;
@@ -150,33 +150,4 @@
 
 .add-to-cart-btn:active {
   transform: scale(0.9);
-}
-
-.compare-checkbox {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid #ddd;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  color: #ccc;
-  transition: all 0.2s;
-}
-
-.compare-checkbox:hover {
-  border-color: #00897b;
-  color: #00897b;
-}
-
-.compare-checkbox.active {
-  background: #00897b;
-  border-color: #00897b;
-  color: white;
 }

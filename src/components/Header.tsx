@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, Heart, ShoppingCart, ChevronRight, ChevronDown } from 'lucide-react';
+import { Search, User, Heart, ShoppingCart, ChevronRight, ChevronDown, Mail, Lock, ArrowRight, Menu, X } from 'lucide-react';
 import { useApp, categories, productsList } from '../context/AppContext';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import './Header.css';
 
 export default function Header() {
-  const { getCartItemsCount, user } = useApp();
+  const { getCartItemsCount, user, login } = useApp();
   const cartCount = getCartItemsCount();
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
@@ -13,6 +13,14 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuLevel, setMobileMenuLevel] = useState<'main' | 'category'>('main');
+  const [selectedMobileCat, setSelectedMobileCat] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -44,6 +52,44 @@ export default function Header() {
     }
   };
 
+  const handleQuickLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginEmail || !loginPassword) {
+      setLoginError('Introduce tu email y contraseña');
+      return;
+    }
+    setLoginLoading(true);
+    setLoginError('');
+    try {
+      const dummyUser = {
+        id: 'user_' + Date.now(),
+        name: loginEmail.split('@')[0],
+        email: loginEmail,
+        phone: '',
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${loginEmail}`,
+        points: 0,
+        level: 'Bronce' as const,
+        pointsToNextLevel: 200,
+        totalPoints: 0,
+        totalSpent: 0,
+        referrals: 0,
+        streak: 0,
+        joinedDate: new Date().toISOString().split('T')[0],
+        achievements: [],
+        addresses: [],
+        isLoggedIn: true,
+      };
+      login(dummyUser);
+      setShowAccountMenu(false);
+      setLoginEmail('');
+      setLoginPassword('');
+    } catch {
+      setLoginError('Error al iniciar sesión');
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
   const activeCat = categories.find(c => c.id === hoveredCat) || categories[0];
   
   const categoryProducts = useMemo(() => {
@@ -60,14 +106,11 @@ export default function Header() {
 
       <div className="df-main-header">
         <div className="df-container df-main-header-inner">
+          <button className="df-mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
+            <Menu size={24} />
+          </button>
           <Link to="/" className="df-logo">
-            <div className="df-logo-icon-wrap mf-monogram">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 32V8L16 24L26 8V32" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M26 12H34M26 20H32" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <span className="df-logo-text">MadFarma</span>
+            <img src="/logo.png" alt="MadFarma" className="df-logo-img" />
           </Link>
 
           <form className="df-search-bar" onSubmit={handleSearch}>
@@ -128,17 +171,68 @@ export default function Header() {
           </form>
 
           <div className="df-header-actions">
-            {!user.isLoggedIn ? (
-              <Link to="/auth?mode=login" className="df-action-item">
-                <User size={22} />
-                <span>Cuenta</span>
-              </Link>
-            ) : (
-              <Link to="/perfil" className="df-action-item">
-                <User size={22} />
-                <span>{user.name.split(' ')[0]}</span>
-              </Link>
-            )}
+            {/* Account dropdown with quick login */}
+            <div 
+              className="df-account-dropdown"
+              onMouseEnter={() => setShowAccountMenu(true)}
+              onMouseLeave={() => setShowAccountMenu(false)}
+            >
+              {!user.isLoggedIn ? (
+                <Link to="/perfil" className="df-action-item df-account-btn">
+                  <User size={22} />
+                  <span>Cuenta</span>
+                </Link>
+              ) : (
+                <Link to="/perfil" className="df-action-item">
+                  <User size={22} />
+                  <span>{user.name.split(' ')[0]}</span>
+                </Link>
+              )}
+              
+              {showAccountMenu && !user.isLoggedIn && (
+                <div className="df-account-popup">
+                  <div className="df-account-popup-header">
+                    <h3>Iniciar sesión</h3>
+                  </div>
+                  
+                  <div className="df-register-cta">
+                    <p>¿Nuevo en MadFarma?</p>
+                    <Link to="/auth?mode=register" className="df-create-account-btn">
+                      Crea una cuenta en segundos
+                    </Link>
+                  </div>
+                  
+                  <div className="df-divider-text">
+                    <span>o</span>
+                  </div>
+                  
+                  <form className="df-quick-login-form" onSubmit={handleQuickLogin}>
+                    <div className="df-input-group">
+                      <Mail size={18} />
+                      <input type="email" placeholder="Email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
+                    </div>
+                    <div className="df-input-group">
+                      <Lock size={18} />
+                      <input type="password" placeholder="Contraseña" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+                    </div>
+                    
+                    <Link to="/auth?mode=forgot" className="df-forgot-password">¿Has olvidado tu contraseña?</Link>
+                    
+                    {loginError && <p className="df-login-error">{loginError}</p>}
+                    
+                    <button type="submit" className="df-login-btn" disabled={loginLoading}>
+                      {loginLoading ? 'Cargando...' : 'Iniciar sesión'} <ArrowRight size={18} />
+                    </button>
+                    
+                    <button type="button" className="df-social-btn google" onClick={() => navigate('/auth?mode=login&social=google')}>
+                      <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.63l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.96 20.3 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.96 3.7 2.18 7.07l2.85 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+                      Continuar con Google
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+
             <Link to="/favoritos" className="df-action-item">
               <Heart size={22} />
             </Link>
@@ -185,13 +279,15 @@ export default function Header() {
           >
             <div className="df-mega-inner df-container">
               {/* Column 1: Category list */}
-              <div className="df-mega-col df-mega-cats">
+              <div className={`df-mega-col df-mega-cats ${hoveredCat === activeCat.id ? 'active' : ''}`} style={{ '--active-color': activeCat.color } as React.CSSProperties}>
                 {categories.map((cat) => (
                   <div
                     key={cat.id}
                     className={`df-mega-cat-row ${hoveredCat === cat.id ? 'active' : ''}`}
+                    style={{ '--cat-color': cat.color } as React.CSSProperties}
                     onMouseEnter={() => setHoveredCat(cat.id)}
                   >
+                    <span className="df-mega-cat-dot" style={{ backgroundColor: cat.color }} />
                     <span className="df-mega-cat-label">{cat.name}</span>
                     <ChevronRight size={14} className="df-mega-cat-arrow" />
                   </div>
@@ -199,8 +295,8 @@ export default function Header() {
               </div>
 
               {/* Column 2: Subcategories */}
-              <div className="df-mega-col df-mega-subs">
-                <p className="df-mega-sub-title">Categorías</p>
+              <div className="df-mega-col df-mega-subs" style={{ '--active-color': activeCat.color } as React.CSSProperties}>
+                <p className="df-mega-sub-title">{activeCat.name}</p>
                 <ul className="df-mega-sub-list">
                   {activeCat.subcategories.map((sub) => (
                     <li key={sub.id}>
@@ -259,6 +355,117 @@ export default function Header() {
           </div>
         )}
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="df-mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
+      {/* Mobile Menu Panel */}
+      <div className={`df-mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="df-mobile-menu-header">
+          <img src="/logo.png" alt="MadFarma" className="df-mobile-menu-logo" />
+          <button className="df-mobile-menu-close" onClick={() => setMobileMenuOpen(false)}>
+            <X size={24} />
+          </button>
+        </div>
+
+        {mobileMenuLevel === 'main' ? (
+          <div className="df-mobile-menu-content">
+            <div className="df-mobile-menu-section">
+              {!user.isLoggedIn ? (
+                <Link to="/auth?mode=login" className="df-mobile-auth-btn" onClick={() => setMobileMenuOpen(false)}>
+                  Iniciar sesión / Registrarse
+                </Link>
+              ) : (
+                <Link to="/perfil" className="df-mobile-profile-btn" onClick={() => setMobileMenuOpen(false)}>
+                  <User size={20} />
+                  <span>Mi perfil</span>
+                </Link>
+              )}
+            </div>
+
+            <div className="df-mobile-menu-section">
+              <h3>Categorías</h3>
+              <ul className="df-mobile-cats">
+                {categories.map(cat => (
+                  <li key={cat.id}>
+                    <button 
+                      className="df-mobile-cat-btn"
+                      style={{ '--cat-color': cat.color } as React.CSSProperties}
+                      onClick={() => {
+                        setSelectedMobileCat(cat.id);
+                        setMobileMenuLevel('category');
+                      }}
+                    >
+                      <span className="df-mobile-cat-dot" style={{ backgroundColor: cat.color }} />
+                      <span>{cat.name}</span>
+                      <ChevronRight size={16} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="df-mobile-menu-section">
+              <h3>Información</h3>
+              <ul className="df-mobile-links">
+                <li><Link to="/marcas" onClick={() => setMobileMenuOpen(false)}>Marcas</Link></li>
+                <li><Link to="/tienda?sale=true" onClick={() => setMobileMenuOpen(false)}>Promociones</Link></li>
+                <li><Link to="/mapa" onClick={() => setMobileMenuOpen(false)}>Localizar farmacia</Link></li>
+                <li><Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link></li>
+                <li><Link to="/retos" onClick={() => setMobileMenuOpen(false)}>Club MadFarma</Link></li>
+              </ul>
+            </div>
+
+            <div className="df-mobile-menu-section df-mobile-actions">
+              <Link to="/favoritos" className="df-mobile-action-btn" onClick={() => setMobileMenuOpen(false)}>
+                <Heart size={20} /> Mis favoritos
+              </Link>
+              <Link to="/carrito" className="df-mobile-action-btn" onClick={() => setMobileMenuOpen(false)}>
+                <ShoppingCart size={20} /> Mi carrito {cartCount > 0 && `(${cartCount})`}
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="df-mobile-menu-content">
+            <button 
+              className="df-mobile-back-btn"
+              onClick={() => setMobileMenuLevel('main')}
+            >
+              <ChevronRight size={20} style={{ transform: 'rotate(180deg)' }} />
+              Volver
+            </button>
+            
+            <div className="df-mobile-menu-section">
+              <div className="df-mobile-sub-header" style={{ '--cat-color': categories.find(c => c.id === selectedMobileCat)?.color } as React.CSSProperties}>
+                <span className="df-mobile-sub-dot" style={{ backgroundColor: categories.find(c => c.id === selectedMobileCat)?.color }} />
+                <h3>{categories.find(c => c.id === selectedMobileCat)?.name}</h3>
+              </div>
+              <Link 
+                to={`/tienda?cat=${selectedMobileCat}`}
+                className="df-mobile-view-all-btn"
+                style={{ backgroundColor: categories.find(c => c.id === selectedMobileCat)?.color }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Ver todos los productos
+              </Link>
+              <ul className="df-mobile-subs">
+                {categories.find(c => c.id === selectedMobileCat)?.subcategories.map(sub => (
+                  <li key={sub.id}>
+                    <Link 
+                      to={`/tienda?cat=${selectedMobileCat}&sub=${sub.id}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {sub.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   );
 }

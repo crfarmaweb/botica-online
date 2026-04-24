@@ -1,17 +1,13 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ShoppingBasket, Scale } from 'lucide-react';
+import { Star, ShoppingBasket } from 'lucide-react';
 import { useApp, type Product } from '../context/AppContext';
 import './ProductCard.css';
 
 interface ProductCardProps {
   product: Product;
-  showCompare?: boolean;
-  isComparing?: boolean;
-  onToggleCompare?: (product: Product) => void;
 }
 
-export default function ProductCard({ product, showCompare, isComparing, onToggleCompare }: ProductCardProps) {
+export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useApp();
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -20,29 +16,12 @@ export default function ProductCard({ product, showCompare, isComparing, onToggl
     addToCart(product);
   };
 
-  const handleCompareClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onToggleCompare) {
-      onToggleCompare(product);
-    }
-  };
-
   const discount = product.originalPrice 
     ? Math.round((1 - product.price / product.originalPrice) * 100) 
     : 0;
 
   return (
     <Link to={`/producto/${product.id}`} className="product-card-dosfarma">
-      {showCompare && (
-        <button 
-          className={`compare-checkbox ${isComparing ? 'active' : ''}`}
-          onClick={handleCompareClick}
-          title="Comparar"
-        >
-          <Scale size={14} />
-        </button>
-      )}
       <div className="product-image-container">
         <img src={product.image} alt={product.name} loading="lazy" />
         

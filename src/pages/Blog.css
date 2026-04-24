@@ -41,9 +41,9 @@
 
 .blog-cat-btn.active,
 .blog-cat-btn:hover {
-  background: #00897b;
+  background: var(--color-primary, #5D8A82)
   color: white;
-  border-color: #00897b;
+  border-color: var(--color-primary, #5D8A82)
 }
 
 .blog-grid {
@@ -83,7 +83,7 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: #00897b;
+  background: var(--color-primary, #5D8A82)
   color: white;
   padding: 4px 12px;
   border-radius: 4px;
@@ -128,7 +128,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #00897b;
+  color: var(--color-primary, #5D8A82)
   font-weight: 600;
   text-decoration: none;
 }
@@ -172,7 +172,7 @@
 
 .newsletter-form button {
   padding: 14px 28px;
-  background: #00897b;
+  background: var(--color-primary, #5D8A82)
   color: white;
   border: none;
   border-radius: 8px;
@@ -193,7 +193,7 @@
 .blog-article .back-btn {
   background: none;
   border: none;
-  color: #00897b;
+  color: var(--color-primary, #5D8A82)
   font-size: 1rem;
   cursor: pointer;
   margin-bottom: 24px;
@@ -211,7 +211,7 @@
   margin-top: 32px;
   margin-bottom: 48px;
   padding: 12px 24px;
-  background: #00897b;
+  background: var(--color-primary, #5D8A82)
   color: white;
   border-radius: 8px;
   width: auto;

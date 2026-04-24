@@ -29,6 +29,7 @@ export interface Category {
   id: string;
   name: string;
   icon: string;
+  color: string;
   subcategories: Subcategory[];
 }
 
@@ -73,10 +74,9 @@ export interface User {
   phone?: string;
   avatar: string;
   points: number;
-  level: 'Bronce' | 'Plata' | 'Oro' | 'Platino' | 'Esmeralda' | 'Diamante';
+  level: 'Bronce' | 'Plata' | 'Oro' | 'Platino' | 'Diamante';
   pointsToNextLevel: number;
   totalPoints: number;
-  totalSpent: number;
   referrals: number;
   streak: number;
   achievements: Achievement[];
@@ -166,6 +166,8 @@ interface AppContextType {
   register: (userData: { email: string; password: string; name: string; phone: string }) => Promise<boolean>;
   updateProfile: (data: Partial<User>) => void;
   addReview: (productId: number, rating: number, comment: string) => void;
+  showCartNotification: { show: boolean; productName: string; };
+  hideCartNotification: () => void;
 }
 
 export const categories: Category[] = [
@@ -173,6 +175,7 @@ export const categories: Category[] = [
     id: 'bebe-mama',
     name: 'Bebé y Mamá',
     icon: '👶',
+    color: '#E8B4BC',
     subcategories: [
       { id: 'alimentacion-bebe', name: 'Alimentación' },
       { id: 'cuidado-bebe', name: 'Cuidado del Bebé' },
@@ -188,6 +191,7 @@ export const categories: Category[] = [
     id: 'cosmetica-belleza',
     name: 'Cosmética y Belleza',
     icon: '💄',
+    color: '#D4A5A5',
     subcategories: [
       { id: 'cuidado-facial', name: 'Cuidado Facial' },
       { id: 'cuidado-corporal', name: 'Cuidado Corporal' },
@@ -203,6 +207,7 @@ export const categories: Category[] = [
     id: 'higiene',
     name: 'Higiene',
     icon: '🧼',
+    color: '#A8D8EA',
     subcategories: [
       { id: 'higiene-bucal', name: 'Higiene Bucal' },
       { id: 'higiene-cabello', name: 'Higiene del Cabello' },
@@ -216,6 +221,7 @@ export const categories: Category[] = [
     id: 'dietetica-nutricion',
     name: 'Dietética y Nutrición',
     icon: '🥗',
+    color: '#B5D89A',
     subcategories: [
       { id: 'vitaminas', name: 'Vitaminas' },
       { id: 'complementos', name: 'Complementos Alimenticios' },
@@ -231,6 +237,7 @@ export const categories: Category[] = [
     id: 'medicamentos',
     name: 'Medicamentos',
     icon: '💊',
+    color: '#E8A8A8',
     subcategories: [
       { id: 'dolores', name: 'Dolores y Fiebre' },
       { id: 'resfriado', name: 'Resfriado y Gripe' },
@@ -244,6 +251,7 @@ export const categories: Category[] = [
     id: 'salud-sexual',
     name: 'Salud Sexual',
     icon: '💑',
+    color: '#C9B1D9',
     subcategories: [
       { id: 'anticonceptivos', name: 'Anticonceptivos' },
       { id: 'test-embarazo', name: 'Test de Embarazo' },
@@ -255,6 +263,7 @@ export const categories: Category[] = [
     id: 'optica',
     name: 'Óptica',
     icon: '👓',
+    color: '#B8C5D6',
     subcategories: [
       { id: 'gafas-sol', name: 'Gafas de Sol' },
       { id: 'gafas-vista', name: 'Gafas de Ver' },
@@ -268,6 +277,7 @@ export const categories: Category[] = [
     id: 'ortopedia',
     name: 'Ortopedia',
     icon: '🦴',
+    color: '#E8D4A8',
     subcategories: [
       { id: 'movilidad', name: 'Movilidad' },
       { id: 'fajas', name: 'Fajas y Bragueros' },
@@ -281,6 +291,7 @@ export const categories: Category[] = [
     id: 'fitoterapia',
     name: 'Fitoterapia',
     icon: '🌿',
+    color: '#B8D4B8',
     subcategories: [
       { id: 'plantas-medicinales', name: 'Plantas Medicinales' },
       { id: 'infusiones', name: 'Infusiones' },
@@ -293,6 +304,7 @@ export const categories: Category[] = [
     id: 'mascotas',
     name: 'Mascotas',
     icon: '🐾',
+    color: '#C5D4B8',
     subcategories: [
       { id: 'perros', name: 'Perros' },
       { id: 'gatos', name: 'Gatos' },
@@ -306,6 +318,7 @@ export const categories: Category[] = [
     id: 'solar',
     name: 'Protección Solar',
     icon: '☀️',
+    color: '#F5D6A5',
     subcategories: [
       { id: 'solar-facial', name: 'Solar Facial' },
       { id: 'solar-corporal', name: 'Solar Corporal' },
@@ -319,6 +332,7 @@ export const categories: Category[] = [
     id: 'primeros-auxilios',
     name: 'Primeros Auxilios',
     icon: '🩹',
+    color: '#EF4444',
     subcategories: [
       { id: 'vendajes', name: 'Vendajes' },
       { id: 'gasas', name: 'Gasas y Algodón' },
@@ -385,9 +399,8 @@ const defaultUser: User = {
   avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=guest',
   points: 0,
   level: 'Bronce',
-  pointsToNextLevel: 200,
+  pointsToNextLevel: 500,
   totalPoints: 0,
-  totalSpent: 0,
   referrals: 0,
   streak: 0,
   joinedDate: new Date().toISOString().split('T')[0],
@@ -524,6 +537,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [reviews, setReviews] = useState<Review[]>(sampleReviews);
+  const [showCartNotification, setShowCartNotification] = useState({ show: false, productName: '' });
 
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
@@ -552,6 +566,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...product, quantity }];
     });
+    setShowCartNotification({ show: true, productName: product.name });
+    setTimeout(() => setShowCartNotification({ show: false, productName: '' }), 3000);
+  };
+
+  const hideCartNotification = () => {
+    setShowCartNotification({ show: false, productName: '' });
   };
 
   const removeFromCart = (productId: number) => {
@@ -766,6 +786,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       register,
       updateProfile,
       addReview,
+      showCartNotification,
+      hideCartNotification,
     }}>
       {children}
     </AppContext.Provider>
