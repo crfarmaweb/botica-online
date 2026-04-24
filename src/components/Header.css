@@ -522,7 +522,7 @@
 .df-mega-sub-title {
   font-size: 11px;
   font-weight: 700;
-  color: rgba(255,255,255,0.7);
+  color: #1a1d32;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   margin: 0 0 12px;
@@ -540,14 +540,14 @@
 .df-mega-sub-link {
   display: block;
   text-decoration: none;
-  color: white;
+  color: #1a1d32;
   font-size: 14px;
   padding: 10px 20px;
   transition: background 0.12s;
 }
 
 .df-mega-sub-link:hover {
-  background: rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.08);
 }
 
 /* Column 3 – Products grid */

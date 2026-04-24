@@ -12,6 +12,9 @@ import Carrito from './pages/Carrito';
 import Blog from './pages/Blog';
 import Favoritos from './pages/Favoritos';
 import Auth from './pages/Auth';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import NewPassword from './pages/NewPassword';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
 import Header from './components/Header';
@@ -22,20 +25,21 @@ import CartNotification from './components/CartNotification';
 import { MessageCircle } from 'lucide-react';
 
 function AuthListener() {
-  const { login } = useApp();
+  const { login, logout } = useApp();
   
   useEffect(() => {
     if (!supabase) return;
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        const { user } = session;
+    const initAuth = async () => {
+      if (!supabase) return;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
         login({
-          id: user.id,
-          name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
-          email: user.email || '',
-          phone: user.user_metadata?.phone || '',
-          avatar: user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`,
+          id: session.user.id,
+          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario',
+          email: session.user.email || '',
+          phone: session.user.user_metadata?.phone || '',
+          avatar: session.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${session.user.id}`,
           points: 100,
           level: 'Bronce',
           pointsToNextLevel: 400,
@@ -47,12 +51,47 @@ function AuthListener() {
           isLoggedIn: true,
         });
       }
+    };
+    
+    initAuth();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        login({
+          id: session.user.id,
+          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario',
+          email: session.user.email || '',
+          phone: session.user.user_metadata?.phone || '',
+          avatar: session.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${session.user.id}`,
+          points: 100,
+          level: 'Bronce',
+          pointsToNextLevel: 400,
+          totalPoints: 100,
+          referrals: 0,
+          streak: 0,
+          achievements: [],
+          joinedDate: new Date().toISOString().split('T')[0],
+          isLoggedIn: true,
+        });
+      } else if (event === 'SIGNED_OUT') {
+        logout();
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, [login]);
+  }, [login, logout]);
 
   return null;
+}
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useApp();
+  
+  if (!user.isLoggedIn) {
+    return <Navigate to="/auth" replace />;
+  }
+  
+  return <>{children}</>;
 }
 
 function App() {
@@ -70,12 +109,15 @@ function App() {
               <Route path="/marcas" element={<Tienda />} />
               <Route path="/producto/:id" element={<ProductoDetalle />} />
               <Route path="/mapa" element={<Mapa />} />
-              <Route path="/perfil" element={<Perfil />} />
-              <Route path="/retos" element={<Retos />} />
+              <Route path="/perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
+              <Route path="/retos" element={<ProtectedRoute><Retos /></ProtectedRoute>} />
               <Route path="/carrito" element={<Carrito />} />
               <Route path="/blog" element={<Blog />} />
-              <Route path="/favoritos" element={<Favoritos />} />
+              <Route path="/favoritos" element={<ProtectedRoute><Favoritos /></ProtectedRoute>} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/registro" element={<Register />} />
+              <Route path="/recuperar" element={<ForgotPassword />} />
+              <Route path="/nueva-contrasena" element={<NewPassword />} />
               <Route path="/terminos" element={<Terminos />} />
               <Route path="/privacidad" element={<Privacidad />} />
               <Route path="*" element={<Navigate to="/" replace />} />

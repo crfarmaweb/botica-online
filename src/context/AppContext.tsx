@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { supabase } from '../lib/supabase';
 
 export interface Product {
   id: number;
@@ -697,9 +698,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const login = (userData: User) => {
     setUser({ ...userData, isLoggedIn: true });
     localStorage.setItem('user', JSON.stringify(userData));
+    if (userData.id !== 'guest') {
+      supabase?.auth.updateUser({
+        data: {
+          full_name: userData.name,
+          phone: userData.phone,
+        }
+      });
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase?.auth.signOut();
     setUser(defaultUser);
     localStorage.removeItem('user');
     window.location.href = '/';
