@@ -99,16 +99,10 @@ export default function Tienda() {
           <ChevronRight size={14} />
           {isMarcasPage ? (
             <span>Marcas</span>
+          ) : selectedCategory !== 'all' ? (
+            <Link to="/tienda" className="df-breadcrumb-link">Productos</Link>
           ) : (
-            <>
-              <span>La Tienda</span>
-              {selectedCategory !== 'all' && (
-                <>
-                  <ChevronRight size={14} />
-                  <span>{selectedCategoryData?.name || selectedCategory}</span>
-                </>
-              )}
-            </>
+            <span>Productos</span>
           )}
         </div>
 
@@ -228,7 +222,7 @@ export default function Tienda() {
           <div className="df-tienda-main">
             {/* Header */}
             <div className="df-tienda-header">
-              <h1>{selectedCategoryData?.name || 'La Tienda'}</h1>
+              <h1>{selectedCategoryData?.name || 'Todos los productos'}</h1>
               <span className="df-products-count">{products.length} productos</span>
             </div>
 

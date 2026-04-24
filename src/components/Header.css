@@ -506,7 +506,17 @@
 /* Column 2 – Subcategories */
 .df-mega-subs {
   padding: 16px 0;
-  background: linear-gradient(135deg, var(--active-color, var(--color-primary, #5D8A82)) 0%, color-mix(in srgb, var(--active-color, var(--color-primary, #5D8A82)) 90%, white) 100%);
+  background: linear-gradient(135deg, var(--active-color) 0%, color-mix(in srgb, var(--active-color) 90%, white) 100%);
+  animation: subFadeIn 0.2s ease;
+}
+
+@keyframes subFadeIn {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .df-mega-sub-title {
@@ -533,8 +543,7 @@
   color: white;
   font-size: 14px;
   padding: 10px 20px;
-  transition: background 0.12s, color 0.12s;
-  font-weight: 500;
+  transition: background 0.12s;
 }
 
 .df-mega-sub-link:hover {

@@ -17,9 +17,15 @@
   color: #666;
 }
 
-.df-breadcrumb a {
-  color: var(--color-primary, #5D8A82)
+.df-breadcrumb a,
+.df-breadcrumb .df-breadcrumb-link {
+  color: var(--color-primary, #5D8A82);
   text-decoration: none;
+}
+
+.df-breadcrumb a:hover,
+.df-breadcrumb .df-breadcrumb-link:hover {
+  text-decoration: underline;
 }
 
 .df-breadcrumb span:last-child {

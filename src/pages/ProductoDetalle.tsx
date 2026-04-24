@@ -57,7 +57,7 @@ export default function ProductoDetalle() {
         <div className="df-breadcrumb">
           <Link to="/">Inicio</Link>
           <span>/</span>
-          <Link to="/tienda">La Tienda</Link>
+          <Link to="/tienda">Productos</Link>
           <span>/</span>
           <span>{product.name}</span>
         </div>
