@@ -24,8 +24,9 @@
   font-size: 48px;
   font-weight: 600;
   line-height: 56px;
-  color: #212429;
+  color: #fff;
   margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 .df-breadcrumbs {
@@ -38,17 +39,17 @@
 }
 
 .df-breadcrumbs a {
-  color: #6B7580;
+  color: rgba(255,255,255,0.85);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .df-breadcrumbs a:hover {
-  color: #212429;
+  color: #fff;
 }
 
 .df-breadcrumbs span {
-  color: #212429;
+  color: #fff;
 }
 
 /* Container */

@@ -110,11 +110,12 @@
   border: 1.5px solid transparent;
   border-radius: 6px;
   padding: 0 14px;
-  transition: border-color 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
-.df-search-input-wrap:focus-within {
+.df-search-input-wrap:focus-within,
+.df-search-input-wrap.active {
   border-color: var(--color-primary, #5D8A82);
   background: white;
 }
@@ -122,6 +123,12 @@
 .df-search-icon {
   color: #aaa;
   flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.df-search-input-wrap:focus-within .df-search-icon,
+.df-search-input-wrap.active .df-search-icon {
+  color: var(--color-primary, #5D8A82);
 }
 
 .df-search-input {
@@ -136,6 +143,31 @@
 
 .df-search-input::placeholder {
   color: #aaa;
+  transition: color 0.2s;
+}
+
+.df-search-input:focus::placeholder {
+  color: #888;
+}
+
+.df-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: #e0e0e0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.df-search-clear:hover {
+  background: #ccc;
+  color: #333;
 }
 
 /* Search Suggestions */
@@ -145,12 +177,13 @@
   left: 0;
   right: 0;
   background: white;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   z-index: 1000;
   max-height: 400px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .df-suggestion-item {
@@ -159,11 +192,20 @@
   gap: 12px;
   padding: 10px 16px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.15s;
 }
 
-.df-suggestion-item:hover {
-  background: #f5f5f5;
+.df-suggestion-item:hover,
+.df-suggestion-item.selected {
+  background: #f0f5f4;
+}
+
+.df-suggestion-item.selected {
+  background: rgba(93, 138, 130, 0.12);
+}
+
+.df-suggestion-item.selected .df-suggestion-name {
+  color: var(--color-primary, #5D8A82);
 }
 
 .df-suggestion-img {
@@ -209,10 +251,12 @@
   font-size: 13px;
   border-top: 1px solid #eee;
   cursor: pointer;
+  transition: all 0.15s;
 }
 
-.df-suggestion-all:hover {
-  background: #f5f5f5;
+.df-suggestion-all:hover,
+.df-suggestion-all.selected {
+  background: #f0f5f4;
 }
 
 /* ─── Header actions ───────────────────────────────────────── */

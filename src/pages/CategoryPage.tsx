@@ -149,7 +149,7 @@ export default function CategoryPage() {
         }
 
         .cat-hero {
-          background: #f8f8f8;
+          background: var(--cat-color, #f8f8f8);
           padding: 48px 0;
           border-bottom: 1px solid #eee;
         }
@@ -166,20 +166,23 @@ export default function CategoryPage() {
           height: 12px;
           border-radius: 50%;
           margin-bottom: 8px;
+          background-color: var(--cat-color, #5D8A82) !important;
         }
 
         .cat-hero-title {
           font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
           font-size: 36px;
-          font-weight: 600;
+          font-weight: 700;
           color: #1a1a1a;
           margin: 0;
+          text-shadow: 0 1px 2px rgba(255,255,255,0.3);
         }
 
         .cat-hero-subtitle {
           font-size: 16px;
-          color: #555;
+          color: #333;
           margin: 0;
+          font-weight: 500;
         }
 
         .cat-subs-section {

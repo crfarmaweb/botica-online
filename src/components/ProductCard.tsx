@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Star, ShoppingBasket, Check } from 'lucide-react';
+import { Star, ShoppingBasket, Check, Heart } from 'lucide-react';
 import { useApp, type Product } from '../context/AppContext';
 import { useState } from 'react';
 import './ProductCard.css';
@@ -9,8 +9,10 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addToCart } = useApp();
+  const { addToCart, toggleFavorite, favorites, user } = useApp();
   const [added, setAdded] = useState(false);
+
+  const isFavorite = favorites.some(f => f.id === product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -18,6 +20,16 @@ export default function ProductCard({ product }: ProductCardProps) {
     addToCart(product);
     setAdded(true);
     setTimeout(() => setAdded(false), 600);
+  };
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user.isLoggedIn) {
+      document.dispatchEvent(new CustomEvent('openLoginModal'));
+      return;
+    }
+    toggleFavorite(product);
   };
 
   const discount = product.originalPrice 
@@ -35,6 +47,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         {product.badge === 'new' && (
           <div className="badge-new">Nuevo</div>
         )}
+        <button 
+          className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+          onClick={handleToggleFavorite}
+          title={isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'}
+        >
+          <Heart size={18} fill={isFavorite ? '#ef4444' : 'none'} color={isFavorite ? '#ef4444' : '#666'} />
+        </button>
       </div>
 
       <div className="product-details">

@@ -69,6 +69,7 @@ export default function Tienda() {
   }, [urlCategory, urlSubcategory, urlSearch]);
 
   const selectedCategoryData = categories.find(c => c.id === selectedCategory);
+  const selectedSubcategoryData = selectedCategoryData?.subcategories.find(s => s.id === selectedSubcategory);
 
   const clearFilters = () => {
     setSelectedCategory('all');
@@ -110,7 +111,7 @@ export default function Tienda() {
   return (
     <div className="df-tienda">
       <SEO 
-        title={selectedCategoryData ? `${selectedCategoryData.name} - MadFarma` : "Tienda - MadFarma | Tu Parafarmacia en Madrid"}
+        title={selectedSubcategoryData ? `${selectedSubcategoryData.name} - MadFarma` : selectedCategoryData ? `${selectedCategoryData.name} - MadFarma` : "Tienda - MadFarma | Tu Parafarmacia en Madrid"}
         description="Explora nuestro catálogo de parafarmacia online. Envío 24-48h."
       />
       
@@ -123,12 +124,16 @@ export default function Tienda() {
               {isMarcasPage ? (
                 <span>Marcas</span>
               ) : selectedCategory !== 'all' ? (
-                <Link to="/tienda">Productos</Link>
+                <>
+                  <Link to="/tienda">Productos</Link>
+                  <ChevronRight size={14} />
+                  <span>{selectedSubcategoryData?.name || selectedCategoryData?.name}</span>
+                </>
               ) : (
                 <span>Productos</span>
               )}
             </nav>
-            <h1>{isMarcasPage ? 'Nuestras Marcas' : selectedCategoryData?.name || 'Todos los productos'}</h1>
+            <h1>{isMarcasPage ? 'Nuestras Marcas' : selectedSubcategoryData?.name || selectedCategoryData?.name || 'Todos los productos'}</h1>
           </div>
         </div>
       </div>

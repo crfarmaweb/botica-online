@@ -13,6 +13,7 @@ export default function Header() {
   const [categoryChanging, setCategoryChanging] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
@@ -31,8 +32,17 @@ export default function Header() {
         setShowMenu(false);
       }
     };
+
+    const handleOpenLoginModal = () => {
+      setShowAccountMenu(true);
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('openLoginModal', handleOpenLoginModal);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('openLoginModal', handleOpenLoginModal);
+    };
   }, []);
 
   const handleCatHover = (catId: string) => {
@@ -103,6 +113,53 @@ export default function Header() {
 
   const activeCat = categories.find(c => c.id === hoveredCat) || categories[0];
   
+  const searchResults = useMemo(() => {
+    if (searchQuery.length < 2) return [];
+    return productsList
+      .filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .slice(0, 6);
+  }, [searchQuery]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!showSearchSuggestions || searchResults.length === 0) return;
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex(prev => prev < searchResults.length - 1 ? prev + 1 : 0);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex(prev => prev > 0 ? prev - 1 : searchResults.length - 1);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
+        navigate(`/producto/${searchResults[selectedIndex].id}`);
+        setShowSearchSuggestions(false);
+        setSearchQuery('');
+        setSelectedIndex(-1);
+      } else if (searchQuery.trim()) {
+        navigate(`/tienda?search=${encodeURIComponent(searchQuery)}`);
+        setShowSearchSuggestions(false);
+      }
+    } else if (e.key === 'Escape') {
+      setShowSearchSuggestions(false);
+      setSelectedIndex(-1);
+    }
+  };
+
+  const handleSuggestionClick = (index: number) => {
+    const product = searchResults[index];
+    if (product) {
+      navigate(`/producto/${product.id}`);
+      setShowSearchSuggestions(false);
+      setSearchQuery('');
+      setSelectedIndex(-1);
+    }
+  };
+  
   const categoryProducts = useMemo(() => {
     return productsList
       .filter(p => p.category === hoveredCat)
@@ -125,7 +182,7 @@ export default function Header() {
           </Link>
 
           <form className="df-search-bar" onSubmit={handleSearch}>
-            <div className="df-search-input-wrap">
+            <div className={`df-search-input-wrap ${showSearchSuggestions && searchResults.length > 0 ? 'active' : ''}`}>
               <Search size={18} className="df-search-icon" />
               <input
                 ref={searchInputRef}
@@ -135,44 +192,42 @@ export default function Header() {
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setShowSearchSuggestions(e.target.value.length > 1);
+                  setSelectedIndex(-1);
                 }}
                 onFocus={() => setShowSearchSuggestions(searchQuery.length > 1)}
-                onBlur={() => setTimeout(() => setShowSearchSuggestions(false), 200)}
+                onBlur={() => setTimeout(() => { setShowSearchSuggestions(false); setSelectedIndex(-1); }, 200)}
+                onKeyDown={handleKeyDown}
                 className="df-search-input"
               />
+              {searchQuery && (
+                <button type="button" className="df-search-clear" onClick={() => { setSearchQuery(''); setSelectedIndex(-1); searchInputRef.current?.focus(); }}>
+                  <X size={14} />
+                </button>
+              )}
             </div>
-            {showSearchSuggestions && searchQuery.length > 1 && (
+            {showSearchSuggestions && searchResults.length > 0 && (
               <div className="df-search-suggestions">
-                {productsList
-                  .filter(p => 
-                    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    p.category.toLowerCase().includes(searchQuery.toLowerCase())
-                  )
-                  .slice(0, 6)
-                  .map(product => (
-                    <div
-                      key={product.id}
-                      className="df-suggestion-item"
-                      onClick={() => {
-                        navigate(`/producto/${product.id}`);
-                        setShowSearchSuggestions(false);
-                        setSearchQuery('');
-                      }}
-                    >
-                      <img src={product.image} alt={product.name} className="df-suggestion-img" />
-                      <div className="df-suggestion-info">
-                        <span className="df-suggestion-brand">{product.brand}</span>
-                        <span className="df-suggestion-name">{product.name}</span>
-                        <span className="df-suggestion-price">{product.price.toFixed(2)}€</span>
-                      </div>
+                {searchResults.map((product, index) => (
+                  <div
+                    key={product.id}
+                    className={`df-suggestion-item ${index === selectedIndex ? 'selected' : ''}`}
+                    onClick={() => handleSuggestionClick(index)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                  >
+                    <img src={product.image} alt={product.name} className="df-suggestion-img" />
+                    <div className="df-suggestion-info">
+                      <span className="df-suggestion-brand">{product.brand}</span>
+                      <span className="df-suggestion-name">{product.name}</span>
+                      <span className="df-suggestion-price">{product.price.toFixed(2)}€</span>
                     </div>
-                  ))}
+                  </div>
+                ))}
                 <div
-                  className="df-suggestion-all"
+                  className={`df-suggestion-all ${searchResults.length === selectedIndex ? 'selected' : ''}`}
                   onClick={() => {
                     navigate(`/tienda?search=${encodeURIComponent(searchQuery)}`);
                     setShowSearchSuggestions(false);
+                    setSelectedIndex(-1);
                   }}
                 >
                   Ver todos los resultados para "{searchQuery}"
