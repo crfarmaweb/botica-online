@@ -88,7 +88,7 @@ export default function Auth() {
             joinedDate: new Date().toISOString().split('T')[0],
             isLoggedIn: true,
           });
-          navigate('/perfil');
+          navigate('/');
         }
       } else {
         const result = await supabase?.auth.signInWithPassword({
@@ -120,7 +120,7 @@ export default function Auth() {
             joinedDate: new Date().toISOString().split('T')[0],
             isLoggedIn: true,
           });
-          navigate('/perfil');
+          navigate('/');
         }
       }
     } catch {
