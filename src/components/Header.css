@@ -1168,12 +1168,12 @@
   bottom: 0;
   width: 100%;
   max-width: 320px;
-  background: #212429;
+  background: #ffffff;
   z-index: 1101;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   overflow-y: auto;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
 }
 
 .df-mobile-menu.open {
@@ -1192,13 +1192,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background: #212429;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .df-mobile-menu-logo {
-  height: 20px;
+  height: 24px;
   width: auto;
-  filter: brightness(0) invert(1);
 }
 
 .df-mobile-menu-close {
@@ -1206,7 +1206,7 @@
   border: none;
   cursor: pointer;
   padding: 6px;
-  color: white;
+  color: #333;
   opacity: 0.7;
 }
 
@@ -1217,10 +1217,10 @@
 /* Mobile Menu Content */
 .df-mobile-menu-content {
   padding: 0;
-  background: #212429;
+  background: #ffffff;
 }
 
-/* Auth Button - Full width black */
+/* Auth Button - Full width */
 .df-mobile-auth-btn {
   display: flex;
   align-items: center;
@@ -1229,16 +1229,16 @@
   width: calc(100% - 24px);
   margin: 12px;
   padding: 12px;
-  background: #000000;
+  background: var(--color-primary, #50C878);
   color: white;
   text-decoration: none;
   font-weight: 600;
-  font-size: 13px;
-  border-radius: 4px;
+  font-size: 14px;
+  border-radius: 8px;
 }
 
 .df-mobile-auth-btn:hover {
-  background: #333;
+  background: var(--color-primary-dark, #3CB361);
 }
 
 .df-mobile-profile-btn {
@@ -1247,24 +1247,24 @@
   gap: 10px;
   padding: 14px 16px;
   text-decoration: none;
-  color: white;
+  color: #333;
   font-weight: 500;
   font-size: 14px;
 }
 
 .df-mobile-profile-btn:hover {
-  background: rgba(255,255,255,0.08);
+  background: #f5f5f5;
 }
 
 /* Sections */
 .df-mobile-menu-section {
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .df-mobile-menu-section h3 {
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: #888;
   margin: 0;
   padding: 16px 16px 10px;
   letter-spacing: 0.5px;
@@ -1282,18 +1282,18 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 10px 16px;
+  padding: 12px 16px;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 13px;
-  color: white;
+  font-size: 14px;
+  color: #333;
   font-weight: 500;
   text-align: left;
 }
 
 .df-mobile-cat-btn:hover {
-  background: rgba(255,255,255,0.06);
+  background: #f5f5f5;
 }
 
 .df-mobile-cat-dot {
@@ -1313,15 +1313,15 @@
 
 .df-mobile-links li a {
   display: block;
-  padding: 10px 16px;
-  color: white;
+  padding: 12px 16px;
+  color: #333;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .df-mobile-links li a:hover {
-  background: rgba(255,255,255,0.06);
+  background: #f5f5f5;
 }
 
 /* Actions */
