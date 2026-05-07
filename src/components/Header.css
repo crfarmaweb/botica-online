@@ -99,25 +99,27 @@
 /* ─── Search bar ───────────────────────────────────────────── */
 .df-search-bar {
   flex: 1;
-  max-width: 700px;
+  max-width: 600px;
   position: relative;
 }
 
 .df-search-input-wrap {
   display: flex;
   align-items: center;
-  background: #f2f4f8;
-  border: 1.5px solid transparent;
-  border-radius: 6px;
-  padding: 0 14px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 25px;
+  padding: 0 16px;
+  transition: all 0.25s ease;
   position: relative;
+  height: 46px;
 }
 
 .df-search-input-wrap:focus-within,
 .df-search-input-wrap.active {
-  border-color: var(--color-primary, #5D8A82);
+  border-color: var(--color-primary, #50C878);
   background: white;
+  box-shadow: 0 2px 8px rgba(80, 200, 120, 0.15);
 }
 
 .df-search-icon {
@@ -135,14 +137,14 @@
   flex: 1;
   border: none;
   background: none;
-  padding: 11px 10px;
-  font-size: 14px;
-  color: #1a1d32;
+  padding: 12px 10px;
+  font-size: 15px;
+  color: #333;
   outline: none;
 }
 
 .df-search-input::placeholder {
-  color: #aaa;
+  color: #888;
   transition: color 0.2s;
 }
 
