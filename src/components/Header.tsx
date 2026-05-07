@@ -167,27 +167,38 @@ export default function Header() {
   }, [hoveredCat]);
 
   return (
-    <header className="df-header">
-      <div className="df-promo-bar">
-        <span>-11% Extra</span> en pedidos de +65€ con código: <strong>SUPER11</strong>
+    <header className="df-header" style={{ background: 'white', borderBottom: '1px solid #f3f4f6' }}>
+      <div className="df-promo-bar" style={{ background: '#14B8A6', padding: '8px 16px', textAlign: 'center', color: 'white', fontSize: '12.5px' }}>
+        <span style={{ background: 'white', color: '#14B8A6', padding: '2px 8px', borderRadius: '4px', fontWeight: '700', marginRight: '6px' }}>-11% Extra</span> 
+        en pedidos de +65€ con código: <strong style={{ color: 'white' }}>SUPER11</strong>
       </div>
 
-      <div className="df-main-header">
-        <div className="df-container df-main-header-inner">
-          <button className="df-mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
-            <Menu size={24} />
-          </button>
-          <Link to="/" className="df-logo">
-            <img src="/logo.svg" alt="MadFarma" className="df-logo-img" />
-          </Link>
+      <div className="df-main-header" style={{ maxWidth: '1400px', margin: '0 auto', padding: '16px 40px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* Logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }} className="mobile-menu-btn">
+              <Menu size={26} />
+            </button>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+              <div style={{ width: '40px', height: '40px', background: '#14B8A6', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '700', fontSize: '24px' }}>
+                M
+              </div>
+              <div>
+                <span style={{ fontSize: '22px', fontWeight: '600', color: '#111827', letterSpacing: '-0.3px' }}>madfarma</span>
+                <p style={{ fontSize: '10px', color: '#6b7280', margin: 0, marginTop: '-2px' }}>Madrid</p>
+              </div>
+            </Link>
+          </div>
 
-          <form className="df-search-bar" onSubmit={handleSearch}>
-            <div className={`df-search-input-wrap ${showSearchSuggestions && searchResults.length > 0 ? 'active' : ''}`}>
-              <Search size={18} className="df-search-icon" />
+          {/* Buscador */}
+          <form onSubmit={handleSearch} style={{ flex: '1', maxWidth: '560px', margin: '0 32px' }}>
+            <div style={{ position: 'relative' }}>
+              <Search size={20} style={{ position: 'absolute', left: '16px', top: '14px', color: '#9ca3af' }} />
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="¿Qué estás buscando?"
+                placeholder="Busca leche de continuación, cremas, vitaminas..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -197,13 +208,8 @@ export default function Header() {
                 onFocus={() => setShowSearchSuggestions(searchQuery.length > 1)}
                 onBlur={() => setTimeout(() => { setShowSearchSuggestions(false); setSelectedIndex(-1); }, 200)}
                 onKeyDown={handleKeyDown}
-                className="df-search-input"
+                style={{ width: '100%', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '50px', padding: '12px 16px 12px 48px', fontSize: '14px', outline: 'none', transition: 'all 0.2s' }}
               />
-              {searchQuery && (
-                <button type="button" className="df-search-clear" onClick={() => { setSearchQuery(''); setSelectedIndex(-1); searchInputRef.current?.focus(); }}>
-                  <X size={14} />
-                </button>
-              )}
             </div>
             {showSearchSuggestions && searchResults.length > 0 && (
               <div className="df-search-suggestions">
