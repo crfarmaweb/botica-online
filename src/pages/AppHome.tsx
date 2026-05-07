@@ -18,33 +18,33 @@ const brands = [
 ];
 
 const promoBanners = [
-  { id: 1, title: '-30% en Protección Solar', subtitle: 'Dale a tu piel la protección que merece', img: 'https://images.unsplash.com/photo-1535295972055-1c762f4483e5?w=600&h=200&fit=crop', link: '/tienda?cat=solar', color: '#FF6B6B' },
-  { id: 2, title: '2ª Unidad -50%', subtitle: 'En toda la cosmética seleccionada', img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=200&fit=crop', link: '/tienda?cat=cosmetica-belleza', color: '#4BFFA3' },
-  { id: 3, title: 'Envío Gratis', subtitle: 'En pedidos superiores a 35€', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=200&fit=crop', link: '/tienda', color: 'var(--color-primary' },
-  { id: 4, title: 'Club MF ELITE', subtitle: 'Acumula puntos en cada compra', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d42d52?w=600&h=200&fit=crop', link: '/retos', color: '#a71e2c' },
+  { id: 1, title: '-30% Protección Solar', subtitle: 'Las mejores marcas a precio Special', img: 'https://images.unsplash.com/photo-1556228720-195a672e17a3?w=600&h=400&fit=crop', link: '/tienda?cat=solar', color: '#FF6B6B' },
+  { id: 2, title: '2ª Unidad -50%', subtitle: 'En toda la cosmética selected', img: 'https://images.unsplash.com/photo-1596755389378-c31d2a118d75?w=600&h=400&fit=crop', link: '/tienda?cat=cosmetica-belleza', color: '#4BFFA3' },
+  { id: 3, title: 'Envío Gratis +35€', subtitle: 'Recogida en farmacia también', img: 'https://images.unsplash.com/photo-1584308666744-24dc5e5f08be?w=600&h=400&fit=crop', link: '/tienda', color: '#5D8A82' },
+  { id: 4, title: 'Club MF ELITE', subtitle: 'Accumula puntos en cada compra', img: 'https://images.unsplash.com/photo-1576091160550-21830c395212?w=600&h=400&fit=crop', link: '/retos', color: '#a71e2c' },
 ];
 
 const heroSlides = [
   {
-    title: 'Hasta -50% en Protección Solar',
-    subtitle: 'Protege tu piel todo el año con las mejores marcas',
-    image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=1200&h=400&fit=crop',
+    title: 'Hasta -50% Solar',
+    subtitle: ' proteccion solar para toute la familia',
+    image: 'https://images.unsplash.com/photo-1556228852-dd3b6c9405a4?w=1200&h=500&fit=crop',
     link: '/tienda?cat=solar',
-    cta: 'Ver selección'
+    cta: 'Ver sélection'
   },
   {
-    title: '2ª Unidad -50% en Cosmética',
-    subtitle: 'Aprovecha nuestras ofertas en belleza y cuidado',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1200&h=400&fit=crop',
+    title: '2ª Unit -50% Cosmétique',
+    subtitle: 'les meilleures offres en beauté et soin',
+    image: 'https://images.unsplash.com/photo-1616683693504-3ea7e258c7f4?w=1200&h=500&fit=crop',
     link: '/tienda?cat=cosmetica-belleza',
-    cta: 'Ver ofertas'
+    cta: 'Ver offres'
   },
   {
-    title: 'MF ELITE - Club de Puntos',
-    subtitle: 'Acumula puntos y get rewards exclusivas',
-    image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=1200&h=400&fit=crop',
+    title: 'MF ELITE - Club Points',
+    subtitle: 'Accumule des points et obtient des rewards exclusives',
+    image: 'https://images.unsplash.com/photo-1600857062141-33f8c4dac0d4?w=1200&h=500&fit=crop',
     link: '/retos',
-    cta: 'Únete al club'
+    cta: 'Rejoindre le club'
   }
 ];
 

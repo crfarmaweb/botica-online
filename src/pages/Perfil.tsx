@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Settings, Bell, Shield, HelpCircle, LogOut, ChevronRight, Star, Package, Gift, MapPin, CreditCard } from 'lucide-react';
+import { Settings, Bell, Shield, HelpCircle, LogOut, ChevronRight, Star, Package, Gift, MapPin, CreditCard, Camera, Save, X, User, Mail, Phone, Calendar } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import PageBanner from '../components/PageBanner';
 import './Perfil.css';
@@ -14,8 +14,16 @@ const levelColors: Record<string, string> = {
 };
 
 export default function Perfil() {
-  const { user, orders, favorites, logout } = useApp();
+  const { user, orders, favorites, logout, updateUser } = useApp();
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: user.name,
+    email: user.email,
+    phone: user.phone || '',
+    birthDate: user.birthDate || '',
+  });
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!user.isLoggedIn && user.id === 'guest') {
@@ -26,6 +34,36 @@ export default function Perfil() {
   const handleLogout = async () => {
     await logout();
     navigate('/');
+  };
+
+  const handleEditClick = () => {
+    setEditForm({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      birthDate: user.birthDate || '',
+    });
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  const handleSaveEdit = async () => {
+    setSaving(true);
+    try {
+      await updateUser({
+        name: editForm.name,
+        phone: editForm.phone,
+        birthDate: editForm.birthDate,
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const menuItems = [
@@ -48,31 +86,87 @@ export default function Perfil() {
       />
 
       <section className="user-info-card surface-lowest soft-lift" style={{ '--level-color': levelColors[user.level] } as React.CSSProperties}>
-        <div className="avatar-wrapper">
-          <img src={user.avatar} alt={user.name} className="avatar-image" />
-        </div>
-        <div className="user-details">
-          <h2 className="title-md">{user.name}</h2>
-          <p className="body-lg text-outline">{user.email}</p>
-          <div className="user-level-container">
-            <div className="user-level" style={{ '--level-color': levelColors[user.level] } as React.CSSProperties}>
-              <Star size={16} fill="var(--level-color)" color="var(--level-color)" />
-              <span className="label-md">Nivel {user.level}</span>
+        {isEditing ? (
+          <div className="edit-form">
+            <div className="edit-avatar">
+              <img src={user.avatar} alt={user.name} className="avatar-image" />
+              <button className="avatar-edit-btn"><Camera size={16} /></button>
             </div>
-            <div className="points-progress-wrap">
-              <div className="points-text">
-                <span className="label-sm">{user.points} / {user.points + user.pointsToNextLevel} puntos</span>
+            <div className="edit-fields">
+              <div className="edit-field">
+                <label><User size={16} /> Nombre completo</label>
+                <input 
+                  type="text" 
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                  placeholder="Tu nombre"
+                />
               </div>
-              <div className="progress-bar-bg">
-                <div 
-                  className="progress-bar-fill" 
-                  style={{ width: `${(user.points / (user.points + user.pointsToNextLevel)) * 100}%` }}
-                ></div>
+              <div className="edit-field">
+                <label><Mail size={16} /> Email</label>
+                <input 
+                  type="email" 
+                  value={editForm.email}
+                  disabled
+                  className="disabled"
+                />
               </div>
+              <div className="edit-field">
+                <label><Phone size={16} /> Teléfono</label>
+                <input 
+                  type="tel" 
+                  value={editForm.phone}
+                  onChange={(e) => setEditForm({...editForm, phone: e.target.value})}
+                  placeholder="Tu teléfono"
+                />
+              </div>
+              <div className="edit-field">
+                <label><Calendar size={16} /> Fecha de nacimiento</label>
+                <input 
+                  type="date" 
+                  value={editForm.birthDate}
+                  onChange={(e) => setEditForm({...editForm, birthDate: e.target.value})}
+                />
+              </div>
+            </div>
+            <div className="edit-actions">
+              <button onClick={handleCancelEdit} className="cancel-btn" disabled={saving}>
+                <X size={18} /> Cancelar
+              </button>
+              <button onClick={handleSaveEdit} className="save-btn" disabled={saving}>
+                <Save size={18} /> {saving ? 'Guardando...' : 'Guardar'}
+              </button>
             </div>
           </div>
-        </div>
-        <button className="edit-profile-btn btn-secondary">Editar</button>
+        ) : (
+          <>
+            <div className="avatar-wrapper">
+              <img src={user.avatar} alt={user.name} className="avatar-image" />
+            </div>
+            <div className="user-details">
+              <h2 className="title-md">{user.name}</h2>
+              <p className="body-lg text-outline">{user.email}</p>
+              <div className="user-level-container">
+                <div className="user-level" style={{ '--level-color': levelColors[user.level] } as React.CSSProperties}>
+                  <Star size={16} fill="var(--level-color)" color="var(--level-color)" />
+                  <span className="label-md">Nivel {user.level}</span>
+                </div>
+                <div className="points-progress-wrap">
+                  <div className="points-text">
+                    <span className="label-sm">{user.points} / {user.points + user.pointsToNextLevel} puntos</span>
+                  </div>
+                  <div className="progress-bar-bg">
+                    <div 
+                      className="progress-bar-fill" 
+                      style={{ width: `${(user.points / (user.points + user.pointsToNextLevel)) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button className="edit-profile-btn btn-secondary" onClick={handleEditClick}>Editar</button>
+          </>
+        )}
       </section>
 
       <section className="stats-row">

@@ -141,7 +141,7 @@ export default function Admin() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string | number) => {
     if (!confirm('¿Eliminar este producto?')) return;
     
     try {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -64,7 +64,7 @@ export default function RichPage() {
     return content.blocks.map((block: any, index: number) => {
       switch (block.type) {
         case 'header':
-          const Tag = `h${block.data.level || 2}` as keyof JSX.IntrinsicElements;
+          const Tag = `h${block.data.level || 2}` as keyof React.JSX.IntrinsicElements;
           return <Tag key={index}>{block.data.text}</Tag>;
         case 'paragraph':
           return <p key={index} dangerouslySetInnerHTML={{ __html: block.data.text }} />;

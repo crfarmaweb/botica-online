@@ -60,11 +60,11 @@ export default function CartPopup() {
               <div className="cart-popup-price-qty">
                 <span className="cart-popup-price">{currentProduct.price.toFixed(2)}€</span>
                 <div className="cart-popup-qty">
-                  <button onClick={() => updateQuantity(currentProduct.id, Math.max(1, (cart.find(i => i.id === currentProduct.id)?.quantity || 1) - 1))}>
+                  <button onClick={() => updateQuantity(String(currentProduct.id), Math.max(1, (cart.find(i => i.id === currentProduct.id)?.quantity || 1) - 1))}>
                     <Minus size={14} />
                   </button>
                   <span>{cart.find(i => i.id === currentProduct.id)?.quantity || 1}</span>
-                  <button onClick={() => updateQuantity(currentProduct.id, (cart.find(i => i.id === currentProduct.id)?.quantity || 1) + 1)}>
+                  <button onClick={() => updateQuantity(String(currentProduct.id), (cart.find(i => i.id === currentProduct.id)?.quantity || 1) + 1)}>
                     <Plus size={14} />
                   </button>
                 </div>

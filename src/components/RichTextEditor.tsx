@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { EditorJS } from '@editorjs/editorjs';
+// @ts-ignore - EditorJS types not available
+import EditorJS from '@editorjs/editorjs';
+// @ts-ignore
 import Header from '@editorjs/header';
+// @ts-ignore
 import List from '@editorjs/list';
+// @ts-ignore
 import Image from '@editorjs/image';
+// @ts-ignore
 import Paragraph from '@editorjs/paragraph';
 import { supabase } from '../lib/supabase';
 import { Save, X, Loader2, Layout } from 'lucide-react';

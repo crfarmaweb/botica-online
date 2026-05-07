@@ -4,7 +4,7 @@ import { alimentacionInfantilProducts } from '../data/alimentacionInfantil';
 import { suavinexProducts } from '../data/suavinexProducts';
 
 export interface Product {
-  id: string;
+  id: string | number;
   name: string;
   price: number;
   originalPrice?: number;
@@ -75,6 +75,7 @@ export interface User {
   name: string;
   email: string;
   phone?: string;
+  birthDate?: string;
   avatar: string;
   points: number;
   level: 'Bronce' | 'Plata' | 'Oro' | 'Platino' | 'Diamante';
@@ -140,6 +141,8 @@ export interface Order {
 interface AppContextType {
   user: User;
   cart: CartItem[];
+  products: Product[];
+  productsLoading: boolean;
   challenges: Challenge[];
   orders: Order[];
   categories: Category[];
@@ -148,8 +151,8 @@ interface AppContextType {
   reviews: Review[];
   categoriesLoading: boolean;
   addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  removeFromCart: (productId: string | number) => void;
+  updateQuantity: (productId: string | number, quantity: number) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getCartDiscount: () => number;
@@ -168,6 +171,7 @@ interface AppContextType {
   logout: () => void;
   register: (userData: { email: string; password: string; name: string; phone: string }) => Promise<boolean>;
   updateProfile: (data: Partial<User>) => void;
+  updateUser: (data: { name?: string; phone?: string; birthDate?: string }) => Promise<void>;
   addReview: (productId: number, rating: number, comment: string) => void;
   showCartNotification: { show: boolean; productName: string; };
   hideCartNotification: () => void;
@@ -380,15 +384,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [reviews, setReviews] = useState<Review[]>(sampleReviews);
   const [showCartNotification, setShowCartNotification] = useState({ show: false, productName: '' });
 
-export const useProducts = () => {
-  const { products, productsLoading } = useContext(AppContext) as AppContextType;
-  return { products, productsLoading };
-};
-
-export const getProducts = () => {
-  return products;
-};
-
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) setCart(JSON.parse(savedCart));
@@ -434,11 +429,11 @@ export const getProducts = () => {
     setShowCartNotification({ show: false, productName: '' });
   };
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = (productId: string | number) => {
     setCart(prev => prev.filter(item => item.id !== productId));
   };
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (productId: string | number, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
@@ -609,6 +604,12 @@ export const getProducts = () => {
     localStorage.setItem('user', JSON.stringify(currentUser));
   };
 
+  const updateUser = async (data: { name?: string; phone?: string; birthDate?: string }) => {
+    const updatedUser = { ...user, ...data };
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   const addReview = (productId: number, rating: number, comment: string) => {
     const newReview: Review = {
       id: reviews.length + 1,
@@ -626,6 +627,8 @@ export const getProducts = () => {
     <AppContext.Provider value={{
       user,
       cart,
+      products,
+      productsLoading,
       challenges,
       orders,
       categories,
@@ -654,6 +657,7 @@ export const getProducts = () => {
       logout,
       register,
       updateProfile,
+      updateUser,
       addReview,
       showCartNotification,
       hideCartNotification,

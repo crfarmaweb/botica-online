@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type Component } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { allCategories, type Product } from '../context/AppContext';
+import { categories, type Product, type Category } from '../context/AppContext';
 
 interface PageBlock {
   id: string;
@@ -99,11 +99,11 @@ export default function DynamicPage() {
 }
 
 function BlockRenderer({ block, index }: { block: PageBlock; index: number }) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [blockProducts, setBlockProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
 
   useEffect(() => {
-    if (block.type === 'products') {
+    if (block.type === 'blockProducts') {
       loadProducts(block.content.category, block.content.limit);
     }
   }, [block.type]);
@@ -112,15 +112,15 @@ function BlockRenderer({ block, index }: { block: PageBlock; index: number }) {
     setLoadingProducts(true);
     try {
       if (supabase) {
-        let query = supabase.from('products').select('*').eq('inStock', true);
+        let query = supabase.from('blockProducts').select('*').eq('inStock', true);
         if (category && category !== 'todas' && category !== '') {
           query = query.eq('category', category);
         }
         const { data } = await query.limit(limit);
-        if (data) setProducts(data);
+        if (data) setBlockProducts(data);
       }
     } catch (e) {
-      console.log('Error loading products:', e);
+      console.log('Error loading blockProducts:', e);
     }
     setLoadingProducts(false);
   };
@@ -193,15 +193,15 @@ function BlockRenderer({ block, index }: { block: PageBlock; index: number }) {
         </section>
       );
 
-    case 'products':
+    case 'blockProducts':
       return (
-        <section className="block-products">
+        <section className="block-blockProducts">
           <h3>Productos</h3>
           {loadingProducts ? (
-            <div className="products-loading">Cargando...</div>
-          ) : products.length > 0 ? (
-            <div className="products-grid">
-              {products.map(product => (
+            <div className="blockProducts-loading">Cargando...</div>
+          ) : blockProducts.length > 0 ? (
+            <div className="blockProducts-grid">
+              {blockProducts.map(product => (
                 <Link to={`/producto/${product.id}`} key={product.id} className="product-card-mini">
                   <img src={product.image} alt={product.name} />
                   <div className="product-info">
@@ -218,14 +218,13 @@ function BlockRenderer({ block, index }: { block: PageBlock; index: number }) {
       );
 
     case 'categories':
-      const cats = allCategories.slice(0, block.content.limit || 6);
+      const cats = categories.slice(0, block.content.limit || 6);
       return (
         <section className="block-categories">
           <h3>Categorías</h3>
           <div className="categories-grid">
-            {cats.map(cat => (
+            {cats.map((cat: Category) => (
               <Link to={`/${cat.id}`} key={cat.id} className="category-card-mini" style={{ borderColor: cat.color }}>
-                <span className="category-icon">{cat.icon}</span>
                 <span>{cat.name}</span>
               </Link>
             ))}
