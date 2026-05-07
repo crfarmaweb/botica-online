@@ -10,6 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@builder.io/sdk-react": "^5.2.1",
+    "@editorjs/editorjs": "^2.31.6",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/image": "^2.10.3",
+    "@editorjs/list": "^2.0.9",
+    "@editorjs/paragraph": "^2.11.7",
     "@stripe/stripe-js": "^9.0.1",
     "@supabase/supabase-js": "^2.101.1",
     "leaflet": "^1.9.4",

@@ -4,7 +4,7 @@ import { alimentacionInfantilProducts } from '../data/alimentacionInfantil';
 import { suavinexProducts } from '../data/suavinexProducts';
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   originalPrice?: number;
@@ -354,9 +354,40 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [challenges, setChallenges] = useState<Challenge[]>(initialChallenges);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [favorites, setFavorites] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([
+    ...alimentacionInfantilProducts,
+    ...suavinexProducts,
+  ]);
+  const [productsLoading, setProductsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      if (!supabase) return;
+      const { data } = await supabase.from('products').select('*').order('name');
+      if (data && data.length > 0) {
+        setProducts(data.map((p: any) => ({
+          ...p,
+          inStock: p.in_stock,
+          originalPrice: p.original_price,
+          stockCount: p.stock,
+        })));
+      }
+      setProductsLoading(false);
+    }
+    loadProducts();
+  }, []);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [reviews, setReviews] = useState<Review[]>(sampleReviews);
   const [showCartNotification, setShowCartNotification] = useState({ show: false, productName: '' });
+
+export const useProducts = () => {
+  const { products, productsLoading } = useContext(AppContext) as AppContextType;
+  return { products, productsLoading };
+};
+
+export const getProducts = () => {
+  return products;
+};
 
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');

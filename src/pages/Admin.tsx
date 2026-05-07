@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2, Search, X, Save, Package, Tag, Loader2, Upload, FileJson, AlertCircle, CheckCircle } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, X, Save, Package, Tag, Loader2, Upload, FileJson, AlertCircle, CheckCircle, Layout } from 'lucide-react';
 import { type Product, categories as allCategories } from '../context/AppContext';
 import { supabase } from '../lib/supabase';
 import SEO from '../components/SEO';
 import PageBanner from '../components/PageBanner';
+import PageBuilder from '../components/PageBuilder';
+import RichTextEditor from '../components/RichTextEditor';
 import './Admin.css';
 
 const allBrands = ['Nutribén', 'Almirón', 'Avent', 'Chicco', 'Suavinex', 'La Roche-Posay', 'Vichy', 'CeraVe', 'Bioderma', 'Isdin', 'SVR', 'Avene', 'Neutrogena'];
@@ -33,7 +35,7 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'import'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'import' | 'pages' | 'content'>('products');
   const [orders, setOrders] = useState<any[]>([]);
   const [importData, setImportData] = useState('');
   const [importPreview, setImportPreview] = useState<any[]>([]);
@@ -201,6 +203,20 @@ export default function Admin() {
           >
             <Upload size={18} />
             Importar
+          </button>
+          <button 
+            className={`admin-tab ${activeTab === 'pages' ? 'active' : ''}`}
+            onClick={() => setActiveTab('pages')}
+          >
+            <Layout size={18} />
+            Páginas
+          </button>
+          <button 
+            className={`admin-tab ${activeTab === 'content' ? 'active' : ''}`}
+            onClick={() => setActiveTab('content')}
+          >
+            <FileJson size={18} />
+            Contenido
           </button>
         </div>
 
@@ -465,6 +481,9 @@ export default function Admin() {
             </table>
           </div>
         )}
+
+        {activeTab === 'pages' && <PageBuilder />}
+        {activeTab === 'content' && <RichTextEditor />}
       </div>
     </div>
   );

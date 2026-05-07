@@ -19,6 +19,8 @@ import NewPassword from './pages/NewPassword';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
 import Admin from './pages/Admin';
+import DynamicPage from './pages/DynamicPage';
+import RichPage from './pages/RichPage';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
@@ -124,6 +126,7 @@ function App() {
               <Route path="/terminos" element={<Terminos />} />
               <Route path="/privacidad" element={<Privacidad />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/:slug" element={<DynamicPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
